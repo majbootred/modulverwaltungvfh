@@ -102,3 +102,17 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#DjangoGirls-Recommendations
+*.pyc
+*~
+__pycache__
+#Name von Verenas venv hierhin
+djangodev
+db.sqlite3
+/static
+.DS_Store
+
+#extra stuff
+.idea/
+

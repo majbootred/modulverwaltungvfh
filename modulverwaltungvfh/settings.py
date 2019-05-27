@@ -25,7 +25,7 @@ SECRET_KEY = '^*0pwi9dvwzk&l9uuga5u5dz*tf_p=@^l%nubffe8++^96jode'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['modulverwaltungvfh.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'modulverwaltungvfh.pythonanywhere.com']
 
 
 # Application definition

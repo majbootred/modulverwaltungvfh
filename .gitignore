@@ -113,7 +113,7 @@ db.sqlite3
 /static
 .DS_Store
 .sql
-settings.py
+modulverwaltungvfh/settings.py
 
 #extra stuff
 .idea/

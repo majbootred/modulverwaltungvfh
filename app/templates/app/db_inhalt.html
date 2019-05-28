@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for entry in all_entries %}
+    <div>
+    <p>Modul-ID: {{ entry.MID }}</p>
+    <p>Modul-Name: {{ entry.Name }}</p>
+    </div>
+{% endfor %}
+</body>
+</html>

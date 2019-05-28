@@ -107,11 +107,13 @@ venv.bak/
 *.pyc
 *~
 __pycache__
-#Name von Verenas venv hierhin
+modulverwaltungvfh
 djangodev
 db.sqlite3
 /static
 .DS_Store
+.sql
+modulverwaltungvfh/settings.py
 
 #extra stuff
 .idea/

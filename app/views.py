@@ -7,7 +7,6 @@ from django.http import HttpResponse
 
 
 def index(request):
-#    return HttpResponse("Hello, World!")
     all_entries = Module.objects.all()
     return render(request, 'app/db_inhalt.html', {'all_entries': all_entries})
 

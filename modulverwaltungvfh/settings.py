@@ -81,6 +81,16 @@ DATABASES = {
     }
 }
 
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'modulverwaltungv$mv',
+        'USER': 'modulverwaltungv',
+        'PASSWORD': 'oos2019django',
+        'HOST': 'modulverwaltungvfh.mysql.pythonanywhere-services.com',
+    }
+}'''
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Modules
+from .models import Module
 
 # Register your models here.
 
 # admin / supercoding2019
 
-admin.site.register(Modules)
+admin.site.register(Module)

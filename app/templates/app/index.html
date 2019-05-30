@@ -20,20 +20,21 @@
                         </a>
                     </div>
                     <div id="panel-1" class="panel-body collapse">
-                        <div>
+                        <ul class="list-group">
                             {% for entry in all_entries %}
-                                <div>
-                                    <a href="#" class="btn btn-link"
-                                       role="button">{% bootstrap_icon "remove-circle" %}</a>
+                                <li class="list-group-item">
+                                <span class="badge"> <a href="#" class="btn btn-link"
+                                       role="button">{% bootstrap_icon "remove-circle" %}</a></span>
+
                                     {{ entry.Name }} ({{ entry.MID }})
-                                </div>
+                                </li>
 
                             {% endfor %}
-                            <p>
+                            <li class="list-group-item">
                                 <a href="#" class="btn btn-link" role="button">{% bootstrap_icon "plus-sign" %}</a>
                                 Modul hinzufügen
-                            </p>
-                        </div>
+                            </li>
+                        </ul>
                         <div>
                             <a href="#" class="btn btn-link pull-right text-small" role="button">Semester löschen</a>
                         </div>
@@ -53,20 +54,21 @@
                         </a>
                     </div>
                     <div id="panel-2" class="panel-body collapse">
-                        <div>
+                                                <ul class="list-group">
                             {% for entry in all_entries %}
-                                <p>
-                                    <a href="#" class="btn btn-link"
-                                       role="button">{% bootstrap_icon "remove-circle" %}</a>
+                                <li class="list-group-item">
+                                <span class="badge"> <a href="#" class="btn btn-link"
+                                       role="button">{% bootstrap_icon "remove-circle" %}</a></span>
+
                                     {{ entry.Name }} ({{ entry.MID }})
-                                </p>
+                                </li>
 
                             {% endfor %}
-                            <p>
+                            <li class="list-group-item">
                                 <a href="#" class="btn btn-link" role="button">{% bootstrap_icon "plus-sign" %}</a>
                                 Modul hinzufügen
-                            </p>
-                        </div>
+                            </li>
+                        </ul>
                         <div>
                             <a href="#" class="btn btn-link pull-right text-small" role="button">Semester löschen</a>
                         </div>

@@ -25,10 +25,10 @@
         {% if user.is_authenticated %}
             <div class="pull-right">
                 <span style="padding-right: 5px">{{ user.get_username }}</span>
-            <a href="{% url 'accounts:logout' %}" >{% bootstrap_icon "log-out" %}</a></div>
+                <a href="{% url 'accounts:logout' %}">{% bootstrap_icon "log-out" %}</a></div>
 
         {% endif %}
-        <h1><a href="/">Modulverwaltung</a></h1>
+        <h2><a href="/">Modulverwaltung</a></h2>
     </div>
     {% block content %}
     {% endblock %}

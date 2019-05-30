@@ -22,11 +22,11 @@
                     <div id="panel-1" class="panel-body collapse">
                         <div>
                             {% for entry in all_entries %}
-                                <p>
+                                <div>
                                     <a href="#" class="btn btn-link"
                                        role="button">{% bootstrap_icon "remove-circle" %}</a>
                                     {{ entry.Name }} ({{ entry.MID }})
-                                </p>
+                                </div>
 
                             {% endfor %}
                             <p>

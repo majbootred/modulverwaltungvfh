@@ -12,23 +12,19 @@
 {% bootstrap_messages %}
 
 <html>
-    <head>
-        <title>Modulverwaltung</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static '/styles/main.css' %}">
-    </head>
-    <body>
+<head>
+    <title>Modulverwaltung</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static '/styles/main.css' %}">
+</head>
+<body>
 
-        <div class="container">
-        <div class="page-header">
-            <h1><a href="/">Modulverwaltung</a></h1>
-        </div>
-            <div class="row">
-                <div class="col-md-8">
-                    {% block content %}
-                    {% endblock %}
-                </div>
-            </div>
-        </div>
-    </body>
+<div class="container">
+    <div class="page-header">
+        <h1><a href="/">Modulverwaltung</a></h1>
+    </div>
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
 </html>

@@ -3,7 +3,7 @@
 
 {% block content %}
     <h2>Registrieren</h2>
-    <form class="form" action="/accounts/signup/" method="post">
+    <form class="form" action="/accounts/register/" method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}

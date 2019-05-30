@@ -1,6 +1,7 @@
 from django.db import models
 
-class Module(models.Model):
+
+class Modules(models.Model):
     MID = models.CharField(max_length=4, unique=True)
     Name = models.CharField(max_length=50)
     WPF = models.BooleanField(default=0)

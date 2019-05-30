@@ -115,5 +115,5 @@ db.sqlite3
 .sql
 
 #extra stuff
-.idea/workspace.xml
+/.idea/
 

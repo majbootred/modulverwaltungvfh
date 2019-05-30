@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+   {% for entry in all_entries %}
+        <div>
+            <p>Modul-ID: {{ entry.MID }}</p>
+            <p>Modul-Name: {{ entry.Name }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

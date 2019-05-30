@@ -5,5 +5,4 @@ from .models import Modules
 
 # admin / supercoding2019
 
-
 admin.site.register(Modules)

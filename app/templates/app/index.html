@@ -2,6 +2,7 @@
 {% load bootstrap3 %}
 
 {% block content %}
+    <h3>Module von {{ user.get_username }}</h3>
    {% for entry in all_entries %}
         <div>
             <p>Modul-ID: {{ entry.MID }}</p>

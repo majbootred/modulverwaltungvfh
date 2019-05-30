@@ -10,10 +10,11 @@
                 {% bootstrap_form form %}
                 {% buttons %}
                     <button type="submit" class="btn btn-primary">
-                        {% bootstrap_icon "star" %} Anmelden
+                        {% bootstrap_icon "log-in" %} &nbsp;Anmelden
                     </button>
                 {% endbuttons %}
             </form>
+            <a href="{% url 'accounts:register' %}">Noch keinen Account?</a>
         </div>
     </div>
 {% endblock %}

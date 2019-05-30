@@ -2,11 +2,108 @@
 {% load bootstrap3 %}
 
 {% block content %}
-    <h3>Module von {{ user.get_username }}</h3>
-   {% for entry in all_entries %}
-        <div>
-            <p>Modul-ID: {{ entry.MID }}</p>
-            <p>Modul-Name: {{ entry.Name }}</p>
+    <div class="row">
+        <div class="col-md-8 col-xs-12">
+            <h4>Module</h4>
+            <div id="modules">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+
+                        <h3 class="panel-title pull-left">
+                            <a href="#panel-1" data-toggle="collapse">
+                                WS 2017/2018
+                            </a>
+                        </h3>
+
+                        <a href="#panel-2" data-toggle="collapse" class="collapse-icon pull-right">
+                            {% bootstrap_icon "chevron-down" %}
+                        </a>
+                    </div>
+                    <div id="panel-1" class="panel-body collapse">
+                        <div>
+                            {% for entry in all_entries %}
+                                <p>
+                                    <a href="#" class="btn btn-link"
+                                       role="button">{% bootstrap_icon "remove-circle" %}</a>
+                                    {{ entry.Name }} ({{ entry.MID }})
+                                </p>
+
+                            {% endfor %}
+                            <p>
+                                <a href="#" class="btn btn-link" role="button">{% bootstrap_icon "plus-sign" %}</a>
+                                Modul hinzufügen
+                            </p>
+                        </div>
+                        <div>
+                            <a href="#" class="btn btn-link pull-right text-small" role="button">Semester löschen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+
+                        <h3 class="panel-title pull-left">
+                            <a href="#panel-2" data-toggle="collapse">
+                                SS 2018
+                            </a>
+                        </h3>
+
+                        <a href="#panel-2" data-toggle="collapse" class="collapse-icon pull-right">
+                            {% bootstrap_icon "chevron-down" %}
+                        </a>
+                    </div>
+                    <div id="panel-2" class="panel-body collapse">
+                        <div>
+                            {% for entry in all_entries %}
+                                <p>
+                                    <a href="#" class="btn btn-link"
+                                       role="button">{% bootstrap_icon "remove-circle" %}</a>
+                                    {{ entry.Name }} ({{ entry.MID }})
+                                </p>
+
+                            {% endfor %}
+                            <p>
+                                <a href="#" class="btn btn-link" role="button">{% bootstrap_icon "plus-sign" %}</a>
+                                Modul hinzufügen
+                            </p>
+                        </div>
+                        <div>
+                            <a href="#" class="btn btn-link pull-right text-small" role="button">Semester löschen</a>
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    <a href="#" class="btn btn-link" role="button">Semester hinzufügen</a>
+
+                </p>
+            </div>
         </div>
-    {% endfor %}
+        <div class="col-md-4 col-xs-12">
+            <h4>Notenspiegel</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <td>Semester</td>
+                    <td>Fach</td>
+                    <td>Note</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for entry in all_entries %}
+                    <tr>
+                        <td>SS 2018</td>
+                        <td>{{ entry.Name }}</td>
+                        <td>1,7</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="2"><strong>Durchschnitt</strong></td>
+                    <td><strong>1,7</strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
 {% endblock %}

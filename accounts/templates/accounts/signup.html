@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <h2>Registrieren</h2>
+    <form class="form" action="/accounts/signup" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} Registrieren
+            </button>
+        {% endbuttons %}
+    </form>
+{% endblock %}

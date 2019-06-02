@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Module(models.Model):
     DISCIPLINES = (
         ('MINF', 'Medieninformatik'),

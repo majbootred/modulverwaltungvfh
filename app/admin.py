@@ -9,8 +9,12 @@ from .models import Completed
 
 # admin / supercoding2019
 
+<<<<<<< HEAD
 
 admin.site.register(Module)
 admin.site.register(Student)
 admin.site.register(Prerequisite)
 admin.site.register(Completed)
+=======
+admin.site.register(Module)
+>>>>>>> 3e860d3a33988c3b2d1256bff5859f9f106862cd

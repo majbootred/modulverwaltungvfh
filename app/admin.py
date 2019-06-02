@@ -1,5 +1,9 @@
 from django.contrib import admin
 from .models import Module
+from .models import Student
+from .models import Prerequisite
+from .models import Completed
+
 
 # Register your models here.
 
@@ -7,3 +11,6 @@ from .models import Module
 
 
 admin.site.register(Module)
+admin.site.register(Student)
+admin.site.register(Prerequisite)
+admin.site.register(Completed)

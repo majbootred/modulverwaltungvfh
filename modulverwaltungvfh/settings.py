@@ -84,8 +84,6 @@ WSGI_APPLICATION = 'modulverwaltungvfh.wsgi.application'
 #     }
 # }
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

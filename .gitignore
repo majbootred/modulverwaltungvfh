@@ -117,4 +117,6 @@ db.sqlite3
 #extra stuff
 /.idea/
 /app/migrations/
+.vscode/
+
 

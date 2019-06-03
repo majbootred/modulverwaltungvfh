@@ -31,11 +31,12 @@ class Student(models.Model):
     firstname = models.CharField(max_length=30)
     lastname = models.CharField(max_length=30)
     branch = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
-    startingSemester = models.CharField(max_length=7)
+    startingSemester = models.CharField(max_length=7) #WS19/20, SS19
 
 
-class Completed(models.Model):
+class Assignment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    semester = models.CharField(max_length=7) #WS19/20, SS19
     accredited = models.BooleanField(default=0)
     score = models.FloatField()

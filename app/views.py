@@ -6,9 +6,11 @@ from .models import Module, Prerequisite, Assignment, Student
 '''
 def getscoremedian(qs):
     scorelist = []
+    median = 0.0
     for entry in qs:
         scorelist.append(entry.score)
-    median = sum(scorelist)/len(scorelist)
+        if len(scorelist) > 0:
+            median = sum(scorelist)/len(scorelist)
     return "{:.1f}".format(median)
 
 

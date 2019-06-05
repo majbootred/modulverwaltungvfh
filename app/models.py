@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
+#from django.db.models.signals import post_save
+#from django.dispatch import receiver
 
 
 class Module(models.Model):
@@ -27,7 +30,7 @@ class Student(models.Model):
         ('MINF', 'Medieninformatik'),
         ('WINF', 'Wirtschaftsinformatik'),
     )
-    userid = models.EmailField(primary_key=True)
+    userid = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     firstname = models.CharField(max_length=30)
     lastname = models.CharField(max_length=30)
     discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
@@ -37,6 +40,6 @@ class Student(models.Model):
 class Assignment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
-    semester = models.CharField(max_length=7) #WS19/20, SS19
+    semester = models.CharField(max_length=7, blank=True, null=True) #WS19/20, SS19
     accredited = models.BooleanField(default=False)
     score = models.FloatField(blank=True, null=True)

@@ -21,7 +21,7 @@
                 </div>
                 <div id="panel-1" class="panel-body collapse">
                     <ul class="list-group">
-                        {% for entry in all_entries %}
+                        {% for entry in all_modules %}
                         <li class="list-group-item">
                             <span class="badge"> <a href="#" class="btn btn-link"
                                     role="button">{% bootstrap_icon "remove-circle" %}</a></span>
@@ -55,7 +55,7 @@
                 </div>
                 <div id="panel-2" class="panel-body collapse">
                     <ul class="list-group">
-                        {% for entry in all_entries %}
+                        {% for entry in all_modules %}
                         <li class="list-group-item">
                             <span class="badge"> <a href="#" class="btn btn-link"
                                     role="button">{% bootstrap_icon "remove-circle" %}</a></span>
@@ -91,16 +91,16 @@
                 </tr>
             </thead>
             <tbody>
-                {% for entry in all_entries %}
+                {% for entry in all_scores %}
                 <tr>
-                    <td>SS 2018</td>
-                    <td>{{ entry.Name }}</td>
-                    <td>1,7</td>
+                    <td>{{ entry.semester }}</td>
+                    <td>{{ entry.module.Name }}</td>
+                    <td>{{ entry.score }}</td>
                 </tr>
                 {% endfor %}
                 <tr>
                     <td colspan="2"><strong>Durchschnitt</strong></td>
-                    <td><strong>1,7</strong></td>
+                    <td><strong>{{ median }}</strong></td>
                 </tr>
             </tbody>
         </table>

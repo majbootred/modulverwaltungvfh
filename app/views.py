@@ -32,8 +32,9 @@ def index(request):
         return render(request, 'app/index.html',
                       {'all_modules': all_modules, 'all_scores': all_scores, 'median': median})
 
-    # Wenn der User zwar eingeloggt ist, aber noch kein Student-Profil hat
-    elif request.user.is_authenticated and Student.objects.filter(userid=request.user).count() < 0:
+    # Wenn der User zwar eingeloggt ist, aber noch kein Student-Profil hat, und nicht Admin ist
+    elif request.user.is_authenticated and Student.objects.filter(
+            userid=request.user).count() < 0 and not request.user.is_superuser:
         return redirect('accounts:update-profile')
     else:
         return redirect('accounts:login')

@@ -33,7 +33,7 @@ def login_view(request):
             login(request, user)
             current_user = request.user
             num_results = Student.objects.filter(userid=current_user).count()
-            if num_results > 0:
+            if num_results > 0 or user.is_superuser:
                 return redirect('app:index')
             else:
                 return redirect('accounts:update-profile')

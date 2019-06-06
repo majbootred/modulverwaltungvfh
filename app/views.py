@@ -1,16 +1,19 @@
 from django.shortcuts import render, redirect
-from .models import Module, Prerequisite, Assignment, Student
+from .models import Module, Prerequisite, Assignment
+from accounts.models import Student
 
 ''' Schreibt das QuerySet in eine Liste, errechnet den Notendurchschnitt 
     und gibt diesen formatiert (1 Nachkommastelle) zurück
 '''
+
+
 def getscoremedian(qs):
     scorelist = []
     median = 0.0
     for entry in qs:
         scorelist.append(entry.score)
         if len(scorelist) > 0:
-            median = sum(scorelist)/len(scorelist)
+            median = sum(scorelist) / len(scorelist)
     return "{:.1f}".format(median)
 
 
@@ -26,10 +29,14 @@ def index(request):
         # Notenschnitt für den Notenspiegel errechnen
         median = getscoremedian(all_scores)
 
-        return render(request, 'app/index.html', {'all_modules': all_modules, 'all_scores': all_scores, 'median': median})
+        return render(request, 'app/index.html',
+                      {'all_modules': all_modules, 'all_scores': all_scores, 'median': median})
+
+    # Wenn der User zwar eingeloggt ist, aber noch kein Student-Profil hat
+    elif request.user.is_authenticated and Student.objects.filter(userid=request.user).count() < 0:
+        return redirect('accounts:update-profile')
     else:
         return redirect('accounts:login')
-
 
 
 # Nur Test-Ansichten - vor Abgabe rausnehmen
@@ -40,4 +47,4 @@ def modulelist(request):
 
 def prereqlist(request, modul):
     prereqs = Prerequisite.objects.filter(module__MID=modul)
-    return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'modul':modul})
+    return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'modul': modul})

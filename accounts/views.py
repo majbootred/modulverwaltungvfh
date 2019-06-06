@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout,authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+
 from .forms import StudentForm
-from django.http import HttpResponse
+from .models import Student
 
 
 def register_view(request):
@@ -29,7 +31,12 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('app:index')
+            current_user = request.user
+            num_results = Student.objects.filter(userid=current_user).count()
+            if num_results > 0:
+                return redirect('app:index')
+            else:
+                return redirect('accounts:update-profile')
     else:
         form = AuthenticationForm()
 
@@ -53,7 +60,7 @@ def update_student_view(request):
             student.save()
             return redirect('app:index')
         else:
-            return HttpResponse('This page shows a list of most recent posts.')
+            return HttpResponse("That's an error.")
     else:
         form = StudentForm()
     return render(request, 'accounts/update-profile.html', {'form': form})

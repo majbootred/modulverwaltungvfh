@@ -16,13 +16,16 @@ class Module(models.Model):
 
 
 class Prerequisite(models.Model):
+    DISCIPLINES = (
+        ('MINF', 'Medieninformatik'),
+        ('WINF', 'Wirtschaftsinformatik'),
+    )
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='module')
     prereq = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='prereq')
+    discipline = discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
 
     def __str__(self):
         return self.module.MID
-
-
 
 
 class Assignment(models.Model):

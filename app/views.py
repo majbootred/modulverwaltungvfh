@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Module, Prerequisite, Assignment
+from .models import Module, Assignment, Prerequisite
 from accounts.models import Student
 
 ''' Schreibt das QuerySet in eine Liste, errechnet den Notendurchschnitt 

@@ -2,12 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Module, Assignment, Prerequisite
 from accounts.models import Student
 
-''' Schreibt das QuerySet in eine Liste, errechnet den Notendurchschnitt 
-    und gibt diesen formatiert (1 Nachkommastelle) zurück
-'''
 
-
-def index(request):
+def index_view(request):
     if request.user.is_authenticated:
         # Liest alle Objekte aus dem Model Module
         all_modules = Module.objects.all()
@@ -34,12 +30,12 @@ def index(request):
 def modulelist_view(request):
     all_entries = Module.objects.all()
     current_user = request.user
-    current_student = Student.objects.filter(userid = current_user)[0]
-    my_assignments = Assignment.objects.filter(student = current_student)
-    return render(request, 'app/modulelist.html', {'all_entries': all_entries,'my_assignments': my_assignments})
+    current_student = Student.objects.filter(userid=current_user)[0]
+    my_assignments = Assignment.objects.filter(student=current_student)
+    return render(request, 'app/modulelist.html', {'all_entries': all_entries, 'my_assignments': my_assignments})
 
 
-def prereqlist(request, modul):
+def prereqlist_view(request, modul):
     prereqs = Prerequisite.objects.filter(module__MID=modul)
     return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'modul': modul})
 
@@ -47,6 +43,11 @@ def prereqlist(request, modul):
 ##########
 
 # Helper Functions
+
+''' Schreibt das QuerySet in eine Liste, errechnet den Notendurchschnitt 
+    und gibt diesen formatiert (1 Nachkommastelle) zurück
+'''
+
 
 def get_score_median(qs):
     scorelist = []

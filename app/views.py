@@ -7,16 +7,6 @@ from accounts.models import Student
 '''
 
 
-def getscoremedian(qs):
-    scorelist = []
-    median = 0.0
-    for entry in qs:
-        scorelist.append(entry.score)
-        if len(scorelist) > 0:
-            median = sum(scorelist) / len(scorelist)
-    return "{:.1f}".format(median)
-
-
 def index(request):
     if request.user.is_authenticated:
         # Liest alle Objekte aus dem Model Module
@@ -27,7 +17,7 @@ def index(request):
         all_scores = Assignment.objects.filter(score__isnull=False).filter(student__userid=request.user)
 
         # Notenschnitt für den Notenspiegel errechnen
-        median = getscoremedian(all_scores)
+        median = get_score_median(all_scores)
 
         return render(request, 'app/index.html',
                       {'all_modules': all_modules, 'all_scores': all_scores, 'median': median})
@@ -41,11 +31,28 @@ def index(request):
 
 
 # Nur Test-Ansichten - vor Abgabe rausnehmen
-def modulelist(request):
+def modulelist_view(request):
     all_entries = Module.objects.all()
-    return render(request, 'app/modulelist.html', {'all_entries': all_entries})
+    current_user = request.user
+    current_student = Student.objects.filter(userid = current_user)[0]
+    my_assignments = Assignment.objects.filter(student = current_student)
+    return render(request, 'app/modulelist.html', {'all_entries': all_entries,'my_assignments': my_assignments})
 
 
 def prereqlist(request, modul):
     prereqs = Prerequisite.objects.filter(module__MID=modul)
     return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'modul': modul})
+
+
+##########
+
+# Helper Functions
+
+def get_score_median(qs):
+    scorelist = []
+    median = 0.0
+    for entry in qs:
+        scorelist.append(entry.score)
+        if len(scorelist) > 0:
+            median = sum(scorelist) / len(scorelist)
+    return "{:.1f}".format(median)

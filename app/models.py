@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import Student
-import datetime, sys
+import datetime
 
 
 class Module(models.Model):

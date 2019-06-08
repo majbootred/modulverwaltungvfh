@@ -1,7 +1,9 @@
 import sys
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Module, Assignment, Prerequisite, Semester
+from .forms import AssignmentForm
 from accounts.models import Student
+from django.http import HttpResponse
 
 
 def index_view(request):
@@ -30,9 +32,38 @@ def index_view(request):
         return redirect('accounts:login')
 
 
+def assignment_new_view(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = AssignmentForm(request.POST)
+            current_student = Student.objects.filter(userid=request.user)[0]
+            if form.is_valid():
+                assignment = form.save(commit=False)
+                assignment.student = current_student
+                assignment.save()
+                return redirect('app:index')
+            else:
+                return HttpResponse("That's an error.")
+        else:
+            form = AssignmentForm()
+        return render(request, 'app/assignment.html', {'form': form})
+
+    else:
+        return redirect('accounts:login')
 
 
-# def available_models_view(request):
+def assignment_edit_view(request, pk):
+    assignment = get_object_or_404(Assignment, pk=pk)
+    if request.method == "POST":
+        form = AssignmentForm(request.POST, instance=assignment)
+        if form.is_valid():
+            assignment = form.save(commit=False)
+            assignment.author = request.user
+            assignment.save()
+            return redirect('app:index')
+    else:
+        form = AssignmentForm(instance=assignment)
+    return render(request, 'blog/assignment.html', {'form': form})
 
 
 # Nur Test-Ansichten - vor Abgabe rausnehmen
@@ -42,9 +73,9 @@ def modulelist_view(request):
     return render(request, 'app/modulelist.html', {'all_entries': all_entries, 'my_assignments': my_assignments})
 
 
-def prereqlist_view(request, modul):
-    prereqs = Prerequisite.objects.filter(module__MID=modul)
-    return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'modul': modul})
+def prereqlist_view(request, module):
+    prereqs = Prerequisite.objects.filter(module__MID=module)
+    return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'module': module})
 
 
 ##########

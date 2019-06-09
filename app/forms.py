@@ -16,7 +16,7 @@ class AssignmentForm(forms.ModelForm):
 
         # prereq = Prerequisite.objects.filter(module__MID=module)
 
-        self.fields['module'].queryset = Module.objects.exclude(MID__in=all_modules_except_mine)
+        self.fields['module'].queryset = Module.objects.exclude(MID__in=my_modules_names)
 
     class Meta:
         model = Assignment

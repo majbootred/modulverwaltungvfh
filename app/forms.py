@@ -1,35 +1,22 @@
 from django import forms
-from .models import Assignment, Module
+from .models import Assignment, Module, Prerequisite
+import sys
 
 
 class AssignmentForm(forms.ModelForm):
-
     module = forms.ModelChoiceField(queryset=None)
-    semester = forms.CharField(max_length=100)
-    accredited = forms.BooleanField(widget=forms.CheckboxInput)
-    score = forms.FloatField()
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['module'].queryset = Module.objects.all()
+
+        my_assignments = Assignment.objects.filter(student__userid=user)
+        my_modules = my_assignments.values('module')
+        my_modules_names = list(my_modules.values_list('module_id', flat=True))
+        all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
+
+        #prereq = Prerequisite.objects.filter(module__MID=module)
+        self.fields['module'].queryset = Module.objects.exclude(MID__in=all_modules_except_mine)
 
     class Meta:
         model = Assignment
         fields = ('module', 'semester', 'accredited', 'score')
-
-
-
-'''
-
-def __init__(self, user, *args, **kwargs):
-        super(goForm, self).__init__(*args, **kwargs)
-        self.fields['user_choice'].queryset = Document.objects.all().filter(who_upload=user)
-
-            
-            
-                student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    module = models.ForeignKey(Module, on_delete=models.CASCADE)
-    semester = models.CharField(max_length=7, blank=True, null=True)  # WS19/20, SS19
-    accredited = models.BooleanField(default=False)
-    score = models.FloatField(blank=True, null=True)
-'''

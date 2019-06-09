@@ -45,8 +45,8 @@ def assignment_new_view(request):
             else:
                 return HttpResponse("That's an error.")
         else:
-            form = AssignmentForm()
-        return render(request, 'app/assignment.html', {'form': form})
+            form = AssignmentForm(user=request.user, data=request.POST)
+        return render(request, 'app/assignment-new.html', {'form': form})
 
     else:
         return redirect('accounts:login')
@@ -63,7 +63,7 @@ def assignment_edit_view(request, pk):
             return redirect('app:index')
     else:
         form = AssignmentForm(instance=assignment)
-    return render(request, 'blog/assignment.html', {'form': form})
+    return render(request, 'app/assignment-new.html', {'form': form})
 
 
 # Nur Test-Ansichten - vor Abgabe rausnehmen

@@ -4,20 +4,34 @@ import sys
 
 
 class AssignmentForm(forms.ModelForm):
+    SEMESTER = [
+        ('WS', 'WS'),
+        ('SS', 'SS')
+    ]
+
+    class Meta:
+        model = Assignment
+        fields = ('module', 'accredited', 'score')
+
+    type_of_semester = forms.CharField(label='--', widget=forms.Select(choices=SEMESTER))
+    year = forms.CharField(max_length=2, label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
     module = forms.ModelChoiceField(queryset=None)
 
     def __init__(self, user, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(AssignmentForm, self).__init__(*args, **kwargs)
 
         my_assignments = Assignment.objects.filter(student__userid=user)
         my_modules = my_assignments.values('module')
         my_modules_names = list(my_modules.values_list('module_id', flat=True))
         all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
 
-        # prereq = Prerequisite.objects.filter(module__MID=module)
+        self.fields['module'].queryset = all_modules_except_mine
 
-        self.fields['module'].queryset = Module.objects.exclude(MID__in=my_modules_names)
+    def get_semester(self):
+        type_of_semester = self.cleaned_data['type_of_semester']
+        year = self.cleaned_data['year']
 
-    class Meta:
-        model = Assignment
-        fields = ('module', 'semester', 'accredited', 'score')
+        if type_of_semester == "WS":
+            year = year + "/" + str((int(year, 10) + 1))
+
+        return type_of_semester + year

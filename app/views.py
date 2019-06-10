@@ -38,8 +38,12 @@ def assignment_new_view(request):
             current_student = Student.objects.filter(userid=request.user)[0]
             form = AssignmentForm(current_student, request.POST)
             if form.is_valid():
+                print('+++++++++++++++++++++++++', file=sys.stderr)
+                #print(form.type_of_semester, file=sys.stderr)
+                print('+++++++++++++++++++++++++', file=sys.stderr)
                 assignment = form.save(commit=False)
                 assignment.student = current_student
+                assignment.semester = form.get_semester()
                 assignment.save()
                 return redirect('app:index')
         else:

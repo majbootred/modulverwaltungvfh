@@ -35,15 +35,13 @@ def index_view(request):
 def assignment_new_view(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            form = AssignmentForm(request.POST)
             current_student = Student.objects.filter(userid=request.user)[0]
+            form = AssignmentForm(current_student, request.POST)
             if form.is_valid():
                 assignment = form.save(commit=False)
                 assignment.student = current_student
                 assignment.save()
                 return redirect('app:index')
-            else:
-                return HttpResponse("That's an error.")
         else:
             form = AssignmentForm(user=request.user, data=request.POST)
         return render(request, 'app/assignment-new.html', {'form': form})

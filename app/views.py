@@ -44,6 +44,9 @@ def assignment_new_view(request):
                 assignment = form.save(commit=False)
                 assignment.student = current_student
                 assignment.semester = form.get_semester()
+                assignment.module = form.get_data('module')
+                assignment.accredited = form.get_data('accredited')
+                assignment.score = form.get_data('score')
                 assignment.save()
                 return redirect('app:index')
         else:

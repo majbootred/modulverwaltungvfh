@@ -11,11 +11,13 @@ class AssignmentForm(forms.ModelForm):
 
     class Meta:
         model = Assignment
-        fields = ('module', 'accredited', 'score')
+        fields = ('accredited', )
 
-    type_of_semester = forms.CharField(label='--', widget=forms.Select(choices=SEMESTER))
+    type_of_semester = forms.CharField(label='Sommer- oder Wintersemester', widget=forms.Select(choices=SEMESTER))
     year = forms.CharField(max_length=2, label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
-    module = forms.ModelChoiceField(queryset=None)
+    module = forms.ModelChoiceField(queryset=None, label="Modul")
+    accredited = forms.BooleanField(required=False, label='Annerkannt')
+    score = forms.FloatField(required=False, label="Note")
 
     def __init__(self, user, *args, **kwargs):
         super(AssignmentForm, self).__init__(*args, **kwargs)
@@ -35,3 +37,6 @@ class AssignmentForm(forms.ModelForm):
             year = year + "/" + str((int(year, 10) + 1))
 
         return type_of_semester + year
+
+    def get_data(self, name):
+        return self.cleaned_data[name]

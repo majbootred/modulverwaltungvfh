@@ -5,6 +5,7 @@ import sys
 
 class AssignmentForm(forms.ModelForm):
     SEMESTER = [
+        (u'', u'---'),
         ('WS', 'WS'),
         ('SS', 'SS')
     ]
@@ -13,9 +14,11 @@ class AssignmentForm(forms.ModelForm):
         model = Assignment
         fields = ('accredited',)
 
-    type_of_semester = forms.CharField(label='Sommer- oder Wintersemester', widget=forms.Select(choices=SEMESTER))
+    type_of_semester = forms.CharField(label='Sommer- oder Wintersemester',
+                                       widget=forms.Select(choices=SEMESTER,
+                                                           attrs={'placeholder': 'Select the category'}))
     year = forms.CharField(max_length=2, label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
-    module = forms.ModelChoiceField(queryset=None, label="Modul")
+    module = forms.ModelChoiceField(queryset=None, label="Modul", empty_label='---')
     accredited = forms.BooleanField(required=False, label='Annerkannt')
     score = forms.FloatField(required=False, label="Note")
 
@@ -35,11 +38,21 @@ class AssignmentForm(forms.ModelForm):
         super(AssignmentForm, self).__init__(*args, **kwargs)
 
         self.fields['module'].queryset = Module.objects.none()
-        '''
+
         my_assignments = Assignment.objects.filter(student__userid=user)
         my_modules = my_assignments.values('module')
         my_modules_names = list(my_modules.values_list('module_id', flat=True))
         all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
 
-        self.fields['module'].queryset = all_modules_except_mine
+        if 'type_of_semester' in self.data:
+            try:
+                type_of_semester = self.data.get('type_of_semester')
+                self.fields['module'].queryset = all_modules_except_mine.filter(**{type_of_semester: True})
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty City queryset
+        elif self.instance.pk:
+            self.fields['module'].queryset = Module.objects.none()
+
+        '''
+
         '''

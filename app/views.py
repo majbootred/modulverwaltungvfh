@@ -35,18 +35,15 @@ def index_view(request):
 
 def get_modules_view(request):
 
-    #andere bedingungen die auch noch erfüllt werden müssen:
-    '''
-     my_assignments = Assignment.objects.filter(student__userid=user)
-        my_modules = my_assignments.values('module')
-        my_modules_names = list(my_modules.values_list('module_id', flat=True))
-        all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
-    :param request:
-    :return:
-    '''
+    current_student = Student.objects.filter(userid=request.user)[0]
+
+    my_assignments = Assignment.objects.filter(student__userid=current_student)
+    my_modules = my_assignments.values('module')
+    my_modules_names = list(my_modules.values_list('module_id', flat=True))
+    all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
 
     type_of_semester = request.GET.get('type_of_semester', None)
-    modules = Module.objects.filter(**{type_of_semester: True})
+    modules = all_modules_except_mine.filter(**{type_of_semester: True})
     return render(request, 'app/modules.html', {'modules': modules})
 
 

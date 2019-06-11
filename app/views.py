@@ -1,6 +1,7 @@
 import sys
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Module, Assignment, Prerequisite, Semester
+from django.http import JsonResponse
 from .forms import AssignmentForm
 from accounts.models import Student
 from django.http import HttpResponse
@@ -32,15 +33,29 @@ def index_view(request):
         return redirect('accounts:login')
 
 
+def get_modules_view(request):
+
+    #andere bedingungen die auch noch erfüllt werden müssen:
+    '''
+     my_assignments = Assignment.objects.filter(student__userid=user)
+        my_modules = my_assignments.values('module')
+        my_modules_names = list(my_modules.values_list('module_id', flat=True))
+        all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
+    :param request:
+    :return:
+    '''
+
+    type_of_semester = request.GET.get('type_of_semester', None)
+    modules = Module.objects.filter(**{type_of_semester: True})
+    return render(request, 'app/modules.html', {'modules': modules})
+
+
 def assignment_new_view(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             current_student = Student.objects.filter(userid=request.user)[0]
             form = AssignmentForm(current_student, request.POST)
             if form.is_valid():
-                print('+++++++++++++++++++++++++', file=sys.stderr)
-                #print(form.type_of_semester, file=sys.stderr)
-                print('+++++++++++++++++++++++++', file=sys.stderr)
                 assignment = form.save(commit=False)
                 assignment.student = current_student
                 assignment.semester = form.get_semester()
@@ -51,6 +66,7 @@ def assignment_new_view(request):
                 return redirect('app:index')
         else:
             form = AssignmentForm(user=request.user, data=request.POST)
+
         return render(request, 'app/assignment-new.html', {'form': form})
 
     else:

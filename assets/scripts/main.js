@@ -8,4 +8,23 @@ $(function() {
 $('.collapse').on('hidden.bs.collapse', function() {
    $(this).parent().find(".collapse-icon .glyphicon").addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-up');
   });
+
+  $("#id_year").change(function () {
+          console.log($('#id_type_of_semester').val()+$(this).val());
+        });
+
+        $("#id_type_of_semester").change(function () {
+            let type_of_semester = $(this).val();
+
+            $.ajax({
+                url: '/ajax/get_modules',
+                data: {
+                    'type_of_semester': type_of_semester
+                },
+                success: function(data){
+                    $("#id_module").html(data);
+                }
+            });
+
+        });
 });

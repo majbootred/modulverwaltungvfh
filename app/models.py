@@ -18,7 +18,7 @@ class Module(models.Model):
     discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
 
     def __str__(self):
-        return '%s (%s)'.format(self.MID, self.Name)
+        return '{} ({})'.format(self.MID, self.Name)
 
 
 class Prerequisite(models.Model):
@@ -31,7 +31,7 @@ class Prerequisite(models.Model):
     discipline = discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
 
     def __str__(self):
-        return '%s (%s)'.format(self.module.MID, self.prereq.MID)
+        return '{} ({})'.format(self.module.MID, self.prereq.MID)
 
 
 class Assignment(models.Model):
@@ -43,7 +43,7 @@ class Assignment(models.Model):
     score = models.FloatField(blank=True, null=True)
 
     def __str__(self):
-        return '%s (%s)'.format(self.student.userid, self.module.MID)
+        return '{} ({})'.format(self.student.userid, self.module.MID)
 
 
 class Semester(object):

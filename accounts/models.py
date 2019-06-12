@@ -12,3 +12,6 @@ class Student(models.Model):
     lastname = models.CharField(max_length=30)
     discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF', null=False, blank=False)
     startingSemester = models.CharField(max_length=7, null=False, blank=False)  # WS19/20, SS19
+
+    def __str__(self):
+        return f'{self.userid}'

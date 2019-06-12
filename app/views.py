@@ -123,9 +123,12 @@ def get_semesters(user):
     for semester_name in my_semester_names.iterator():
         semester = Semester(semester_name)
         semester.assignments = my_assignments.filter(semester=semester.name)
+        for assignment in my_assignments:
+            if assignment.semester == semester.name:
+                semester.start_date = assignment.start_date
+                break
         my_semesters.append(semester)
 
-        my_semesters.sort(key=lambda r: r.start_date)
 
     return my_semesters
 

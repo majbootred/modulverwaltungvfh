@@ -1,6 +1,5 @@
 from django.db import models
 from accounts.models import Student
-import datetime
 
 
 
@@ -18,8 +17,8 @@ class Module(models.Model):
     CP = models.IntegerField(default=5)
     discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
 
-    # def __str__(self):
-    #     return self.MID
+    def __str__(self):
+        return f'{self.MID} ({self.Name})'
 
 
 class Prerequisite(models.Model):
@@ -32,8 +31,7 @@ class Prerequisite(models.Model):
     discipline = discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
 
     def __str__(self):
-        return self.module.MID
-
+        return f'{self.module.MID} ({self.prereq.MID})'
 
 
 class Assignment(models.Model):
@@ -44,22 +42,13 @@ class Assignment(models.Model):
     accredited = models.BooleanField(default=False)
     score = models.FloatField(blank=True, null=True)
 
-    # def __str__(self):
-    #     return self.student, self.module
+    def __str__(self):
+        return f'{self.student.userid} ({self.module.MID})'
+
 
 class Semester(object):
     def __init__(self, name):
-        self.name = name;
-        self.start_date = self.get_start_date(self.name)
+        self.name = name
+        self.start_date = 0
         self.assignments = []
 
-    @staticmethod
-    def get_start_date(name):
-        year = int("20" + name[2:4], 10)
-
-        if name.startswith('WS'):
-            month = 9
-        else:
-            month = 4
-
-        return datetime.datetime(year, month, 1)

@@ -22,13 +22,14 @@
                         </div>
                         <div id={{"panel-"|add:semester.name|slice:"0:10"}}  class="panel-body collapse">
                             <ul class="list-group">
-                                {% for assignemt in semester.assignments %}
+                                {% for assignment in semester.assignments %}
                                     <li class="list-group-item">
                                         <span class="badge">
                                             <a href="#" class="btn btn-link" role="button">{% bootstrap_icon "edit" %}</a>&nbsp;
                                             <a href="#" class="btn btn-link" role="button">{% bootstrap_icon "remove-circle" %}</a>
                                         </span>
-                                        {{ assignemt.module.Name }} ({{ assignemt.module.MID }}) <small> {{ assignemt.score }} / {{ assignemt.accredited }}</small>
+                                        {{ assignment.module.Name }} ({{ assignment.module.MID }}) <small> {% if assignment.score %}{{ assignment.score }}{% endif %}
+                                        {% if assignment.accredited %}anerkannt{% endif %}</small>
                                     </li>
                                 {% endfor %}
 

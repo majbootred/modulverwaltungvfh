@@ -14,4 +14,4 @@ class Student(models.Model):
     startingSemester = models.CharField(max_length=7, null=False, blank=False)  # WS19/20, SS19
 
     def __str__(self):
-        return {self.userid}
+        return '%s'.format(self.userid)

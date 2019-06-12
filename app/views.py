@@ -64,7 +64,7 @@ def assignment_new_view(request):
         if request.method == 'POST':
             current_student = Student.objects.filter(userid=request.user)[0]
             form = AssignmentForm(current_student, request.POST)
-            print(form, sys.stderr)
+            #print(form, sys.stderr)
             if form.is_valid():
                 assignment = form.save(commit=False)
                 assignment.student = current_student

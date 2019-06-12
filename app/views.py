@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .forms import AssignmentForm
 from accounts.models import Student
 from django.http import HttpResponse
+import datetime
 
 
 def index_view(request):
@@ -14,7 +15,8 @@ def index_view(request):
 
         # liest alle zum angemeldeten User gehörenden Objekte aus dem Model Assignment,
         # in welchen eine Note eingetragen ist (für den Notenspiegel)
-        all_scores = Assignment.objects.filter(score__isnull=False).filter(student__userid=request.user)
+        all_scores = Assignment.objects.filter(score__isnull=False).filter(student__userid=request.user)\
+            .order_by('start_date', 'module__Name')
 
         # Notenschnitt für den Notenspiegel errechnen
         median = get_score_median(all_scores)
@@ -47,6 +49,16 @@ def get_modules_view(request):
     return render(request, 'app/modules.html', {'modules': modules})
 
 
+def get_start_date(semester):
+    year = int("20" + semester[2:4], 10)
+
+    if semester.startswith('WS'):
+        month = 9
+    else:
+        month = 4
+
+    return datetime.datetime(year, month, 1)
+
 def assignment_new_view(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -60,6 +72,7 @@ def assignment_new_view(request):
                 assignment.module = form.get_data('module')
                 assignment.accredited = form.get_data('accredited')
                 assignment.score = form.get_data('score')
+                assignment.start_date = get_start_date(assignment.semester)
                 assignment.save()
                 return redirect('app:index')
         else:
@@ -130,3 +143,5 @@ def get_score_median(qs):
         if len(scorelist) > 0:
             median = sum(scorelist) / len(scorelist)
     return "{:.1f}".format(median)
+
+

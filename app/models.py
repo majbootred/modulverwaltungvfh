@@ -3,6 +3,8 @@ from accounts.models import Student
 import datetime
 
 
+
+
 class Module(models.Model):
     DISCIPLINES = (
         ('MINF', 'Medieninformatik'),
@@ -15,6 +17,9 @@ class Module(models.Model):
     WS = models.BooleanField(default=True)
     CP = models.IntegerField(default=5)
     discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
+
+    # def __str__(self):
+    #     return self.MID
 
 
 class Prerequisite(models.Model):
@@ -30,13 +35,17 @@ class Prerequisite(models.Model):
         return self.module.MID
 
 
+
 class Assignment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     semester = models.CharField(max_length=7, blank=True, null=True)  # WS19/20, SS19
+    start_date = models.DateField(blank=True, null=True)
     accredited = models.BooleanField(default=False)
     score = models.FloatField(blank=True, null=True)
 
+    # def __str__(self):
+    #     return self.student, self.module
 
 class Semester(object):
     def __init__(self, name):

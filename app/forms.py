@@ -19,7 +19,7 @@ class AssignmentForm(forms.ModelForm):
                                                            attrs={'placeholder': 'Select the category'}))
     year = forms.CharField(max_length=2, label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
     module = forms.ModelChoiceField(queryset=None, label="Modul", empty_label='---')
-    accredited = forms.BooleanField(required=False, label='Annerkannt')
+    accredited = forms.BooleanField(required=False, label='anerkannt')
     score = forms.FloatField(required=False, label="Note")
 
     def get_semester(self):

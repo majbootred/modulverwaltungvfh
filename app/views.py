@@ -129,7 +129,7 @@ def get_semesters(user):
                 break
         my_semesters.append(semester)
 
-
+        my_semesters.sort(key=lambda r: r.start_date)
     return my_semesters
 
 

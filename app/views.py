@@ -107,7 +107,7 @@ def modulelist_view(request):
 
 
 def prereqlist_view(request, my_module):
-    allowed = get_prereq(my_module)
+    allowed = get_prereq(my_module, request.user)
     prereqs = Prerequisite.objects.filter(module__MID=my_module)
     return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'module': my_module, 'allowed': allowed})
 
@@ -153,7 +153,7 @@ def get_score_median(qs):
     return "{:.1f}".format(median)
 
 
-def get_prereq(my_module, assignable=False):
+def get_prereq(my_module, user, assignable=False):
     # Vorbedingungen nach übergebenem Modulkürzel filtern
     my_prereqs = Prerequisite.objects.filter(module__MID=my_module)
     # wenn leer - keine Vorbedingungen nötig - Belegung möglich
@@ -161,17 +161,17 @@ def get_prereq(my_module, assignable=False):
         return True
     # wenn Vorbedingungen vorhanden, Assignments nach bestandenem Modul durchsuchen
     else:
-        my_assignments = Assignment.objects.all()
+        my_assignments = Assignment.objects.filter(student__userid=user)
         # wenn der Student überhaupt schon Module belegt hat
         if my_assignments:
             # pro Vorbedingung prüfen, ob das gesuchte Modul bereits belegt wurde
             for my_prereq in my_prereqs:
-                wanted_assignments = Assignment.objects.filter(module__MID=my_prereq.prereq.MID)
+                wanted_assignments = Assignment.objects.filter(module__MID=my_prereq.prereq.MID, student__userid=user)
                 # wenn das vorbedingte Modul belegt wurde, prüfen ob es erfolgreich abgeschlossen wurde
                 if wanted_assignments:
-                    for my_assignment in wanted_assignments:
-                        my_score = float(my_assignment.score)
-                        if 1.0 <= my_score <= 4.0 or my_assignment.accredited == True:
+                    for wanted_assignment in wanted_assignments:
+                        my_score = float(wanted_assignment.score)
+                        if 1.0 <= my_score <= 4.0 or wanted_assignment.accredited == True:
                             print("Modul bestanden", file=sys.stderr)
                             #wenn erfolgreich abgeschlossen - diese eine Modulbedingung erfüllt - weitere prüfen
                             assignable=True

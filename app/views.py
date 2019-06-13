@@ -7,6 +7,7 @@ from accounts.models import Student
 from django.http import HttpResponse
 import datetime
 
+#assignable = False
 
 def index_view(request):
     if request.user.is_authenticated:
@@ -101,13 +102,17 @@ def assignment_edit_view(request, pk):
 # Nur Test-Ansichten - vor Abgabe rausnehmen
 def modulelist_view(request):
     all_entries = Module.objects.all()
-    my_assignments = Assignment.objects.filter(student__userid=request.user)
+
     return render(request, 'app/modulelist.html', {'all_entries': all_entries, 'my_assignments': my_assignments})
 
 
-def prereqlist_view(request, module):
-    prereqs = Prerequisite.objects.filter(module__MID=module)
-    return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'module': module})
+def prereqlist_view(request, my_module):
+    allowed = get_prereq(my_module)
+    prereqs = Prerequisite.objects.filter(module__MID=my_module)
+    return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'module': my_module, 'allowed': allowed})
+
+
+
 
 
 ##########
@@ -148,3 +153,33 @@ def get_score_median(qs):
     return "{:.1f}".format(median)
 
 
+def get_prereq(my_module, assignable=False):
+    # Vorbedingungen nach übergebenem Modulkürzel filtern
+    my_prereqs = Prerequisite.objects.filter(module__MID=my_module)
+    # wenn leer - keine Vorbedingungen nötig - Belegung möglich
+    if not my_prereqs:
+        return True
+    # wenn Vorbedingungen vorhanden, Assignments nach bestandenem Modul durchsuchen
+    else:
+        my_assignments = Assignment.objects.all()
+        # wenn der Student überhaupt schon Module belegt hat
+        if my_assignments:
+            # pro Vorbedingung prüfen, ob das gesuchte Modul bereits belegt wurde
+            for my_prereq in my_prereqs:
+                wanted_assignments = Assignment.objects.filter(module__MID=my_prereq.prereq.MID)
+                # wenn das vorbedingte Modul belegt wurde, prüfen ob es erfolgreich abgeschlossen wurde
+                if wanted_assignments:
+                    for my_assignment in wanted_assignments:
+                        if 1.0 <= my_assignment.score <=4.0 or my_assignment.accredited==True:
+                            print("Modul bestanden", file=sys.stderr)
+                            #wenn erfolgreich abgeschlossen - diese eine Modulbedingung erfüllt - weitere prüfen
+                            assignable=True
+                            continue
+                # Modul nicht bestanden, Vorbedingung nicht erfüllt - Belegung nicht möglich
+                else:
+                    assignable = False
+                    continue
+            return assignable
+        # wurde noch kein Modul belegt - Vorbedingung nicht erfüllt - Belegung nicht möglich
+        else:
+            return False

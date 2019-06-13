@@ -10,5 +10,5 @@ urlpatterns = [
     path('ajax/get_modules', views.get_modules_view, name='get_modules'),
     #nur Testansichten - vor Abgabe rausnehmen
     path('modulelist', views.modulelist_view, name='modulelist'),
-    path('prereqlist/<modul>', views.prereqlist_view, name='prereqlist'),
+    path('prereqlist/<my_module>', views.prereqlist_view, name='prereqlist'),
 ]

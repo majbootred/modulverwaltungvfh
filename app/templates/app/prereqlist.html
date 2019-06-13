@@ -6,4 +6,5 @@
     {% for entry in prereqs %}
         <p>{{ entry.prereq.MID }}</p>
     {% endfor %}
+    {% if allowed %}<p>Vorbedingungen erfüllt</p>{% else %}<p>Vorbedingungen nicht erfüllt</p>{% endif %}
 {% endblock %}

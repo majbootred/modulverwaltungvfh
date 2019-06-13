@@ -170,7 +170,8 @@ def get_prereq(my_module, assignable=False):
                 # wenn das vorbedingte Modul belegt wurde, prüfen ob es erfolgreich abgeschlossen wurde
                 if wanted_assignments:
                     for my_assignment in wanted_assignments:
-                        if 1.0 <= my_assignment.score <=4.0 or my_assignment.accredited==True:
+                        my_score = float(my_assignment.score)
+                        if 1.0 <= my_score <= 4.0 or my_assignment.accredited == True:
                             print("Modul bestanden", file=sys.stderr)
                             #wenn erfolgreich abgeschlossen - diese eine Modulbedingung erfüllt - weitere prüfen
                             assignable=True

@@ -83,6 +83,14 @@ def assignment_edit_view(request, pk):
     return render(request, 'app/assignment-new.html', {'form': form})
 
 
+def assignment_delete_view(request, pk):
+    assignment = get_object_or_404(Assignment, pk=pk)
+    assignment.delete()
+    return redirect('app:index')
+
+
+
+
 # Nur Test-Ansichten - vor Abgabe rausnehmen
 def modulelist_view(request):
     all_entries = Module.objects.all()

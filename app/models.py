@@ -2,8 +2,6 @@ from django.db import models
 from accounts.models import Student
 
 
-
-
 class Module(models.Model):
     DISCIPLINES = (
         ('MINF', 'Medieninformatik'),
@@ -27,11 +25,11 @@ class Prerequisite(models.Model):
         ('WINF', 'Wirtschaftsinformatik'),
     )
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='module')
-    prereq = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='prereq')
+    prerequisite = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='prereq')
     discipline = discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF')
 
     def __str__(self):
-        return '{} ({})'.format(self.module.MID, self.prereq.MID)
+        return '{} ({})'.format(self.module.MID, self.prerequisite.MID)
 
 
 class Assignment(models.Model):
@@ -51,4 +49,3 @@ class Semester(object):
         self.name = name
         self.start_date = 0
         self.assignments = []
-

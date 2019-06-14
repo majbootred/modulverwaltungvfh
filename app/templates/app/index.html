@@ -67,6 +67,13 @@
                 </tr>
                 </tbody>
             </table>
+            <hr/>
+            <h4> Noch offene Module:</h4>
+            <ul>
+                {% for module in available_modules %}
+                    <li>{{ module.Name }}</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 

@@ -3,8 +3,8 @@
 
 {% block content %}
     <h3>Vorbedingung für Modul: {{ module }}</h3>
-    {% for entry in prereqs %}
-        <p>{{ entry.prereq.MID }}</p>
+    {% for entry in prerequisites %}
+        <p>{{ entry.prerequisite.MID }}</p>
     {% endfor %}
     {% if allowed %}<p>Vorbedingungen erfüllt</p>{% else %}<p>Vorbedingungen nicht erfüllt</p>{% endif %}
 {% endblock %}

@@ -4,10 +4,10 @@ from .models import Module, Assignment, Prerequisite, Semester
 from django.http import JsonResponse
 from .forms import AssignmentForm
 from accounts.models import Student
+from .utils import *
 from django.http import HttpResponse
 import datetime
 
-#assignable = False
 
 def index_view(request):
     if request.user.is_authenticated:
@@ -16,15 +16,16 @@ def index_view(request):
 
         # liest alle zum angemeldeten User gehörenden Objekte aus dem Model Assignment,
         # in welchen eine Note eingetragen ist (für den Notenspiegel)
-        all_scores = Assignment.objects.filter(score__isnull=False).filter(student__userid=request.user)\
+        all_scores = Assignment.objects.filter(score__isnull=False).filter(student__userid=request.user) \
             .order_by('start_date', 'module__Name')
 
+        available_modules = get_all_modules_except_mine(request.user)
         # Notenschnitt für den Notenspiegel errechnen
         median = get_score_median(all_scores)
 
         return render(request, 'app/index.html',
                       {'all_scores': all_scores, 'median': median,
-                       'my_semesters': my_semesters})
+                       'my_semesters': my_semesters, 'available_modules': available_modules})
 
 
 
@@ -37,35 +38,18 @@ def index_view(request):
 
 
 def get_modules_view(request):
-
     current_student = Student.objects.filter(userid=request.user)[0]
-
-    my_assignments = Assignment.objects.filter(student__userid=current_student)
-    my_modules = my_assignments.values('module')
-    my_modules_names = list(my_modules.values_list('module_id', flat=True))
-    all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
-
     type_of_semester = request.GET.get('type_of_semester', None)
-    modules = all_modules_except_mine.filter(**{type_of_semester: True})
+    modules = get_available_modules(current_student, type_of_semester)
     return render(request, 'app/modules.html', {'modules': modules})
 
-
-def get_start_date(semester):
-    year = int("20" + semester[2:4], 10)
-
-    if semester.startswith('WS'):
-        month = 9
-    else:
-        month = 4
-
-    return datetime.datetime(year, month, 1)
 
 def assignment_new_view(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             current_student = Student.objects.filter(userid=request.user)[0]
             form = AssignmentForm(current_student, request.POST)
-            #print(form, sys.stderr)
+            # print(form, sys.stderr)
             if form.is_valid():
                 assignment = form.save(commit=False)
                 assignment.student = current_student
@@ -103,17 +87,17 @@ def assignment_edit_view(request, pk):
 def modulelist_view(request):
     all_entries = Module.objects.all()
 
-    return render(request, 'app/modulelist.html', {'all_entries': all_entries, 'my_assignments': my_assignments})
+    return render(request, 'app/modulelist.html', {'all_entries': all_entries})
 
 
-def prereqlist_view(request, my_module):
-    allowed = get_prereq(my_module, request.user)
-    prereqs = Prerequisite.objects.filter(module__MID=my_module)
-    return render(request, 'app/prereqlist.html', {'prereqs': prereqs, 'module': my_module, 'allowed': allowed})
+def prerequisites_view(request, my_module):
+    allowed = is_assignable(my_module, request.user)
+    prerequisites = Prerequisite.objects.filter(module__MID=my_module)
+    print(allowed, sys.stderr)
+    return render(request, 'app/prerequisites.html',
+                  {'prerequisites': prerequisites, 'module': my_module, 'allowed': allowed})
 
-
-
-
+#SomeModel.objects.filter(id=id).delete()
 
 ##########
 
@@ -138,49 +122,29 @@ def get_semesters(user):
     return my_semesters
 
 
+def get_start_date(semester):
+    year = int("20" + semester[2:4], 10)
+
+    if semester.startswith('WS'):
+        month = 9
+    else:
+        month = 4
+
+    return datetime.datetime(year, month, 1)
+
+
 ''' Schreibt das QuerySet in eine Liste, errechnet den Notendurchschnitt 
     und gibt diesen formatiert (1 Nachkommastelle) zurück
 '''
 
 
-def get_score_median(qs):
-    scorelist = []
+def get_score_median(all_scores):
+    scores = []
     median = 0.0
-    for entry in qs:
-        scorelist.append(entry.score)
-        if len(scorelist) > 0:
-            median = sum(scorelist) / len(scorelist)
+    for score in all_scores:
+        scores.append(score.score)
+        if len(scores) > 0:
+            median = sum(scores) / len(scores)
     return "{:.1f}".format(median)
 
 
-def get_prereq(my_module, user, assignable=False):
-    # Vorbedingungen nach übergebenem Modulkürzel filtern
-    my_prereqs = Prerequisite.objects.filter(module__MID=my_module)
-    # wenn leer - keine Vorbedingungen nötig - Belegung möglich
-    if not my_prereqs:
-        return True
-    # wenn Vorbedingungen vorhanden, Assignments nach bestandenem Modul durchsuchen
-    else:
-        my_assignments = Assignment.objects.filter(student__userid=user)
-        # wenn der Student überhaupt schon Module belegt hat
-        if my_assignments:
-            # pro Vorbedingung prüfen, ob das gesuchte Modul bereits belegt wurde
-            for my_prereq in my_prereqs:
-                wanted_assignments = Assignment.objects.filter(module__MID=my_prereq.prereq.MID, student__userid=user)
-                # wenn das vorbedingte Modul belegt wurde, prüfen ob es erfolgreich abgeschlossen wurde
-                if wanted_assignments:
-                    for wanted_assignment in wanted_assignments:
-                        my_score = float(wanted_assignment.score)
-                        if 1.0 <= my_score <= 4.0 or wanted_assignment.accredited == True:
-                            print("Modul bestanden", file=sys.stderr)
-                            #wenn erfolgreich abgeschlossen - diese eine Modulbedingung erfüllt - weitere prüfen
-                            assignable=True
-                            continue
-                # Modul nicht bestanden, Vorbedingung nicht erfüllt - Belegung nicht möglich
-                else:
-                    assignable = False
-                    continue
-            return assignable
-        # wurde noch kein Modul belegt - Vorbedingung nicht erfüllt - Belegung nicht möglich
-        else:
-            return False

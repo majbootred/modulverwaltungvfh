@@ -1,23 +1,25 @@
 from .models import Module, Assignment, Prerequisite
+import sys
 
 
 def get_available_modules(user, type_of_semester):
     all_modules_except_mine = get_all_modules_except_mine(user)
     all_modules_except_mine = all_modules_except_mine.filter(**{type_of_semester: True})
-    available_modules = []
+    available_modules_set = set()
+    
     for module in all_modules_except_mine:
-
         if is_assignable(module, user):
-            available_modules.append(module)
+            available_modules_set.add(module.MID)
 
-    return available_modules
+    assignable_modules_query = Module.objects.filter(MID__in=available_modules_set)
+
+    return assignable_modules_query
 
 
 def get_all_modules_except_mine(user):
     my_assignments = Assignment.objects.filter(student__userid=user)
     my_modules = my_assignments.values('module')
     my_modules_names = list(my_modules.values_list('module_id', flat=True))
-
     return Module.objects.exclude(MID__in=my_modules_names)
 
 

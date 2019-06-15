@@ -45,16 +45,13 @@ class AssignmentForm(forms.ModelForm):
         my_modules_names = list(my_modules.values_list('module_id', flat=True))
         all_modules_except_mine = Module.objects.exclude(MID__in=my_modules_names)
 
-
-
         if 'type_of_semester' in self.data:
             try:
                 type_of_semester = self.data.get('type_of_semester')
+
                 assignable_modules = get_available_modules(user, type_of_semester)
-                self.fields['module'].queryset = all_modules_except_mine.filter(**{type_of_semester: True})
+                self.fields['module'].queryset = assignable_modules
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
             self.fields['module'].queryset = Module.objects.none()
-
-

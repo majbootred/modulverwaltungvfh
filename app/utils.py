@@ -55,8 +55,9 @@ def is_assignable(module, user, assignable=False):
             return assignable
 
 
-def is_passed(assignment, passed=False):
-    my_score = float(assignment.score)
-    if 1.0 <= my_score <= 4.0 or assignment.accredited is True:
+def is_passed(assignment, passed=False, my_score=0):
+    if assignment.score:
+        my_score = float(assignment.score)
+    if assignment.accredited is True or 1.0 <= my_score <= 4.0:
         passed = True
     return passed

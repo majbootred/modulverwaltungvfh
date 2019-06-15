@@ -6,7 +6,7 @@ def get_available_modules(user, type_of_semester):
     all_modules_except_mine = get_all_modules_except_mine(user)
     all_modules_except_mine = all_modules_except_mine.filter(**{type_of_semester: True})
     available_modules_set = set()
-    
+
     for module in all_modules_except_mine:
         if is_assignable(module, user):
             available_modules_set.add(module.MID)

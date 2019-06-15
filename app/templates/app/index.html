@@ -25,7 +25,7 @@
                                 {% for assignment in semester.assignments %}
                                     <li class="list-group-item">
                                         <span class="badge">
-                                            <a href="#" class="btn btn-link" role="button">{% bootstrap_icon "edit" %}</a>&nbsp;
+                                            <a href="{% url 'app:assignment-edit' pk=assignment.pk %}"  class="btn btn-link" role="button">{% bootstrap_icon "edit" %}</a>&nbsp;
                                             <a href="{% url 'app:assignment-delete' pk=assignment.pk %}" class="btn btn-link" role="button">{% bootstrap_icon "remove-circle" %}</a>
                                         </span>
                                         {{ assignment.module.Name }} ({{ assignment.module.MID }}) <small> {% if assignment.score %}{{ assignment.score }}{% endif %}

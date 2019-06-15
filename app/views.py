@@ -63,7 +63,7 @@ def assignment_new_view(request):
         else:
             form = AssignmentForm(user=request.user, data=request.POST)
 
-        return render(request, 'app/assignment-new.html', {'form': form})
+        return render(request, 'app/assignment.html', {'form': form})
 
     else:
         return redirect('accounts:login')
@@ -72,15 +72,21 @@ def assignment_new_view(request):
 def assignment_edit_view(request, pk):
     assignment = get_object_or_404(Assignment, pk=pk)
     if request.method == "POST":
+        current_student = Student.objects.filter(userid=request.user)[0]
         form = AssignmentForm(request.POST, instance=assignment)
         if form.is_valid():
             assignment = form.save(commit=False)
-            assignment.author = request.user
+            assignment.student = current_student
+            assignment.semester = form.get_semester()
+            assignment.module = form.get_data('module')
+            assignment.accredited = form.get_data('accredited')
+            assignment.score = form.get_data('score')
+            assignment.start_date = get_start_date(assignment.semester)
             assignment.save()
             return redirect('app:index')
     else:
-        form = AssignmentForm(instance=assignment)
-    return render(request, 'app/assignment-new.html', {'form': form})
+        form = AssignmentForm(instance=assignment, user=request.user)
+    return render(request, 'app/assignment.html', {'form': form})
 
 
 def assignment_delete_view(request, pk):
@@ -105,7 +111,6 @@ def prerequisites_view(request, my_module):
     return render(request, 'app/prerequisites.html',
                   {'prerequisites': prerequisites, 'module': my_module, 'allowed': allowed})
 
-#SomeModel.objects.filter(id=id).delete()
 
 ##########
 

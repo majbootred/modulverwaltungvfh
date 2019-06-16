@@ -129,5 +129,5 @@ def get_unscored_modules(user):
         if (assignment.score and assignment.score <= 4.0) or assignment.accredited:
             continue
         else:
-            unscored_modules.append(assignment.module.Name)
+            unscored_modules.append(assignment.module.Name+' ('+assignment.semester+')')
     return unscored_modules

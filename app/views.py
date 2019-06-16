@@ -6,9 +6,7 @@ from .forms import AssignmentForm
 from accounts.models import Student
 from .utils import *
 from django.http import HttpResponse
-import datetime, locale
-
-#locale.setlocale(locale.LC_ALL, 'de_DE')
+import datetime
 
 
 def index_view(request):
@@ -161,8 +159,6 @@ def get_score_median(all_scores):
         if len(scores) > 0:
             median = sum(scores) / len(scores)
             median = str('{:.1f}'.format(median)).replace('.',',')
-    #return "{:.1f}".format(median)
-    #return locale.format_string('%.1f', median)
     return median
 
 

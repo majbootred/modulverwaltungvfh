@@ -23,6 +23,7 @@ def get_all_modules_except_mine(user):
     my_modules_names = list(my_modules.values_list('module_id', flat=True))
     return Module.objects.exclude(MID__in=my_modules_names)
 
+
 def is_assignable(module, user, assignable=False):
     # Vorbedingungen nach übergebenem Modulkürzel filtern
     all_prerequisites = Prerequisite.objects.filter(module=module)
@@ -69,6 +70,7 @@ def get_WPF_count(user):
         if assignments.module.WPF:
             wpf_count= wpf_count -1
     return wpf_count
+
 
 def get_semesters(user):
     my_assignments = Assignment.objects.filter(student__userid=user)
@@ -118,3 +120,14 @@ def get_score_median(all_scores):
             median = sum(scores) / len(scores)
             median = str('{:.1f}'.format(median)).replace('.',',')
     return median
+
+
+def get_unscored_modules(user):
+    unscored_modules = []
+    my_assignments = Assignment.objects.filter(student__userid=user)
+    for assignment in my_assignments:
+        if (assignment.score and assignment.score <= 4.0) or assignment.accredited:
+            continue
+        else:
+            unscored_modules.append(assignment.module.Name)
+    return unscored_modules

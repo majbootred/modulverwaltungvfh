@@ -21,12 +21,14 @@ def index_view(request):
 
         available_modules = get_all_modules_except_mine(request.user)
         wpf_count = get_WPF_count(request.user)
+        unscored_modules = get_unscored_modules(request.user)
         # Notenschnitt für den Notenspiegel errechnen
         median = get_score_median(all_scores)
 
         return render(request, 'app/index.html',
                       {'all_scores': all_scores, 'median': median,
-                       'my_semesters': my_semesters, 'available_modules': available_modules, 'wpf_count': wpf_count})
+                       'my_semesters': my_semesters, 'available_modules': available_modules, 'wpf_count': wpf_count,
+                       'unscored_modules': unscored_modules})
 
 
 
@@ -112,10 +114,6 @@ def prerequisites_view(request, my_module):
     return render(request, 'app/prerequisites.html',
                   {'prerequisites': prerequisites, 'module': my_module, 'allowed': allowed})
 
-
-##########
-
-# Helper Functions
 
 
 

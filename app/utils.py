@@ -1,4 +1,5 @@
-from .models import Module, Assignment, Prerequisite
+from .models import Module, Assignment, Prerequisite, Semester
+import datetime
 import sys
 
 
@@ -68,3 +69,52 @@ def get_WPF_count(user):
         if assignments.module.WPF:
             wpf_count= wpf_count -1
     return wpf_count
+
+def get_semesters(user):
+    my_assignments = Assignment.objects.filter(student__userid=user)
+    my_semester_names = my_assignments.values_list('semester', flat=True).distinct()
+
+    my_semesters = []
+
+    for semester_name in my_semester_names.iterator():
+        semester = Semester(semester_name)
+        semester.assignments = my_assignments.filter(semester=semester.name)
+        for assignment in my_assignments:
+            if assignment.semester == semester.name:
+                semester.start_date = assignment.start_date
+                break
+        my_semesters.append(semester)
+
+        my_semesters.sort(key=lambda r: r.start_date)
+    return my_semesters
+
+''' Rechnet das Startsemester in ein entsprechendes Datum um, 
+um die Semester sortieren zu können
+'''
+
+
+def get_start_date(semester):
+    year = int("20" + semester[2:4], 10)
+
+    if semester.startswith('WS'):
+        month = 9
+    else:
+        month = 4
+
+    return datetime.datetime(year, month, 1)
+
+
+''' Schreibt das QuerySet in eine Liste, errechnet den Notendurchschnitt 
+    und gibt diesen formatiert (1 Nachkommastelle) zurück
+'''
+
+
+def get_score_median(all_scores):
+    scores = []
+    median = 0.0
+    for score in all_scores:
+        scores.append(score.score)
+        if len(scores) > 0:
+            median = sum(scores) / len(scores)
+            median = str('{:.1f}'.format(median)).replace('.',',')
+    return median

@@ -9,12 +9,26 @@ class AssignmentForm(forms.ModelForm):
         ('WS', 'WS'),
         ('SS', 'SS')
     ]
+    SCORE = [
+        (u'', u''),
+        (1.0, '1,0'),
+        (1.3, '1,3'),
+        (1.7, '1,7'),
+        (2.0, '2,0'),
+        (2.3, '2,3'),
+        (2.7, '2,7'),
+        (3.0, '3,0'),
+        (3.3, '3,3'),
+        (3.7, '3,7'),
+        (4.0, '4,0'),
+        (5.0, '5,0')
+    ]
     type_of_semester = forms.CharField(label='Sommer- oder Wintersemester',
                                        widget=forms.Select(choices=SEMESTER,
                                                            attrs={'placeholder': 'Select the category'}))
     year = forms.CharField(max_length=2, label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
     module = forms.ModelChoiceField(queryset=None, label="Modul", empty_label='---')
-    score = forms.FloatField(required=False, label="Note")
+    score = forms.FloatField(required=False, label="Note", widget=forms.Select(choices=SCORE))
 
     class Meta:
         model = Assignment

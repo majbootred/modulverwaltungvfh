@@ -20,12 +20,13 @@ def index_view(request):
             .order_by('start_date', 'module__Name')
 
         available_modules = get_all_modules_except_mine(request.user)
+        wpf_count = get_WPF_count(request.user)
         # Notenschnitt für den Notenspiegel errechnen
         median = get_score_median(all_scores)
 
         return render(request, 'app/index.html',
                       {'all_scores': all_scores, 'median': median,
-                       'my_semesters': my_semesters, 'available_modules': available_modules})
+                       'my_semesters': my_semesters, 'available_modules': available_modules, 'wpf_count': wpf_count})
 
 
 

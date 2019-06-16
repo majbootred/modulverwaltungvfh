@@ -22,7 +22,6 @@ def get_all_modules_except_mine(user):
     my_modules_names = list(my_modules.values_list('module_id', flat=True))
     return Module.objects.exclude(MID__in=my_modules_names)
 
-
 def is_assignable(module, user, assignable=False):
     # Vorbedingungen nach übergebenem Modulkürzel filtern
     all_prerequisites = Prerequisite.objects.filter(module=module)
@@ -61,3 +60,11 @@ def is_passed(assignment, passed=False, my_score=0):
     if assignment.accredited is True or 1.0 <= my_score <= 4.0:
         passed = True
     return passed
+
+def get_WPF_count(user):
+    wpf_count = 4
+    my_assignments = Assignment.objects.filter(student__userid=user)
+    for assignments in my_assignments:
+        if assignments.module.WPF:
+            wpf_count= wpf_count -1
+    return wpf_count

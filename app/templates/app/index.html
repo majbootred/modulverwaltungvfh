@@ -78,6 +78,7 @@
             </ul>
             <hr/>
             <h4> Noch wählbare Wahlpflichtmodule:</h4>
+            <span>noch offen: {{ wpf_count }}</span>
             <ul class="list-unstyled">
                 {% for module in available_modules %}
                     {% if module.WPF %}

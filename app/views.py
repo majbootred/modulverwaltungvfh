@@ -18,7 +18,7 @@ def index_view(request):
 
         # liest alle zum angemeldeten User gehörenden Objekte aus dem Model Assignment,
         # in welchen eine Note eingetragen ist (für den Notenspiegel)
-        all_scores = Assignment.objects.filter(score__isnull=False).filter(student__userid=request.user) \
+        all_scores = Assignment.objects.filter(score__gte=1.0, score__lte=4.0).filter(student__userid=request.user) \
             .order_by('start_date', 'module__Name')
 
         available_modules = get_all_modules_except_mine(request.user)

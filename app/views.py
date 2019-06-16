@@ -159,7 +159,7 @@ def get_score_median(all_scores):
     for score in all_scores:
         scores.append(score.score)
         if len(scores) > 0:
-            median = sum(scores) / len(scores)git
+            median = sum(scores) / len(scores)
             median = str('{:.1f}'.format(median)).replace('.',',')
     #return "{:.1f}".format(median)
     #return locale.format_string('%.1f', median)

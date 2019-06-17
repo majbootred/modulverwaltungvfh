@@ -22,7 +22,7 @@ $(function () {
         });
     });
 
-    $('#confirmationModal').on('show.bs.modal', function (event) {
+    $('#confirmModal').on('show.bs.modal', function (event) {
         let trigger = $(event.relatedTarget);
         let pk = trigger.data('modal');
         let modal = $(this);

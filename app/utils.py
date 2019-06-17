@@ -63,12 +63,13 @@ def is_passed(assignment, passed=False, my_score=0):
         passed = True
     return passed
 
+
 def get_WPF_count(user):
     wpf_count = 4
     my_assignments = Assignment.objects.filter(student__userid=user)
     for assignments in my_assignments:
         if assignments.module.WPF:
-            wpf_count= wpf_count -1
+            wpf_count = wpf_count - 1
     return wpf_count
 
 
@@ -89,6 +90,7 @@ def get_semesters(user):
 
         my_semesters.sort(key=lambda r: r.start_date)
     return my_semesters
+
 
 ''' Rechnet das Startsemester in ein entsprechendes Datum um, 
 um die Semester sortieren zu können
@@ -118,7 +120,7 @@ def get_score_median(all_scores):
         scores.append(score.score)
         if len(scores) > 0:
             median = sum(scores) / len(scores)
-            median = str('{:.1f}'.format(median)).replace('.',',')
+            median = str('{:.1f}'.format(median)).replace('.', ',')
     return median
 
 
@@ -129,5 +131,5 @@ def get_unscored_modules(user):
         if (assignment.score and assignment.score <= 4.0) or assignment.accredited:
             continue
         else:
-            unscored_modules.append(assignment.module.Name+' ('+assignment.semester+')')
+            unscored_modules.append(assignment.module.Name + ' (' + assignment.semester + ')')
     return unscored_modules

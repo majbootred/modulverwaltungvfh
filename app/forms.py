@@ -1,6 +1,6 @@
 from django import forms
 from .utils import *
-import sys
+import datetime
 
 
 class AssignmentForm(forms.ModelForm):
@@ -26,8 +26,9 @@ class AssignmentForm(forms.ModelForm):
     type_of_semester = forms.CharField(label='Sommer- oder Wintersemester',
                                        widget=forms.Select(choices=SEMESTER,
                                                            attrs={'placeholder': 'Select the category'}))
-    year = forms.CharField(max_length=2, label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
-    module = forms.ModelChoiceField(queryset=None, label="Modul", empty_label='---')
+    year = forms.ChoiceField(choices=[(x, x) for x in range(10, 30)],
+                             label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
+    module = forms.ModelChoiceField(queryset=None, label="Modul (Bitte zuerst das Semester wählen)", empty_label='---')
     score = forms.FloatField(required=False, label="Note", widget=forms.Select(choices=SCORE))
 
     class Meta:
@@ -39,8 +40,10 @@ class AssignmentForm(forms.ModelForm):
         super(AssignmentForm, self).__init__(*args, **kwargs)
 
         self.fields['module'].queryset = Module.objects.none()
+        year = get_current_year()
+        self.initial['year'] = (str(year), year)
 
-        if 'type_of_semester' in self.data:
+        if self.data and 'type_of_semester' in self.data:
             try:
                 type_of_semester = self.data.get('type_of_semester')
                 assignable_modules = get_available_modules(user, type_of_semester)
@@ -67,3 +70,8 @@ class AssignmentForm(forms.ModelForm):
 
     def get_data(self, name):
         return self.cleaned_data[name]
+
+
+def get_current_year():
+    now = datetime.datetime.now()
+    return now.year

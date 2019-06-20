@@ -64,7 +64,7 @@ def assignment_new_view(request):
                 assignment.save()
                 return redirect('app:index')
         else:
-            form = AssignmentForm(user=request.user, data=request.POST)
+            form = AssignmentForm(user=request.user)
 
         return render(request, 'app/assignment.html', {'form': form})
 

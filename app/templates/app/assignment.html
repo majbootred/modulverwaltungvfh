@@ -3,11 +3,21 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-6 col-xs-12">
+        <div class="col-md-8 col-xs-12">
             <h2>Modul</h2>
-            <form class="form" action="{% url 'app:assignment_new' %}" method="post">
+            <form class="form" action="{% url 'app:assignment-new' %}" method="post">
                 {% csrf_token %}
-                {% bootstrap_form form %}
+            <div class="row">
+                <div class="col-md-6 col-xs-12">{% bootstrap_field form.type_of_semester%}</div>
+                <div class="col-md-6 col-xs-12">{% bootstrap_field form.year %}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">{% bootstrap_field form.module %}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-12"> {% bootstrap_field form.score %}</div>
+                <div class="col-md-6 col-xs-12">{% bootstrap_field form.accredited %}</div>
+            </div>
                 {% buttons %}
                     <button type="submit" class="btn btn-primary">
                         {% bootstrap_icon "star" %} Absenden

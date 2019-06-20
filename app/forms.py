@@ -1,6 +1,6 @@
 from django import forms
 from .utils import *
-import datetime
+import datetime, sys
 
 
 class AssignmentForm(forms.ModelForm):
@@ -26,8 +26,8 @@ class AssignmentForm(forms.ModelForm):
     type_of_semester = forms.CharField(label='Sommer- oder Wintersemester',
                                        widget=forms.Select(choices=SEMESTER,
                                                            attrs={'placeholder': 'Select the category'}))
-    year = forms.ChoiceField(choices=[(x, x) for x in range(10, 30)],
-                             label="Jahr des Semesters (zum Beispiel 17 für WS17/18)")
+    year = forms.ChoiceField(choices=[(x, x+2000) for x in range(10, 30)],
+                             label="Jahr des Semesters")
     module = forms.ModelChoiceField(queryset=None, label="Modul (Bitte zuerst das Semester wählen)", empty_label='---')
     score = forms.FloatField(required=False, label="Note", widget=forms.Select(choices=SCORE))
 
@@ -41,7 +41,9 @@ class AssignmentForm(forms.ModelForm):
 
         self.fields['module'].queryset = Module.objects.none()
         year = get_current_year()
-        self.initial['year'] = (str(year), year)
+        print(year, sys.stderr)
+        print(type(year), sys.stderr)
+        self.initial['year'] = (str(year-2000), str(year))
 
         if self.data and 'type_of_semester' in self.data:
             try:

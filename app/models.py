@@ -16,7 +16,7 @@ class Module(models.Model):
     discipline = models.CharField(max_length=4, choices=DISCIPLINES, default='MINF', verbose_name="Fachrichtung")
 
     def __str__(self):
-        return '{} ({})'.format(self.MID, self.Name)
+        return '{} ({})'.format(self.Name, self.MID)
 
 
 class Prerequisite(models.Model):

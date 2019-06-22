@@ -20,7 +20,7 @@ def index_view(request):
             .order_by('start_date', 'module__Name')
 
         available_modules = get_all_modules_except_mine(request.user)
-        wpf_count = get_WPF_count(request.user)
+        wpf_count = get_wpf_count(request.user)
         unscored_modules = get_unscored_modules(request.user)
         # Notenschnitt für den Notenspiegel errechnen
         median = get_score_median(all_scores)
@@ -41,9 +41,13 @@ def index_view(request):
 
 
 def get_modules_view(request):
+    #print(request,file=sys.stderr)
     current_student = Student.objects.filter(userid=request.user)[0]
     type_of_semester = request.GET.get('type_of_semester', None)
-    modules = get_available_modules(current_student, type_of_semester)
+    year = request.GET.get('year', None)
+    #print(type_of_semester,file=sys.stderr)
+    #print(year,file=sys.stderr)
+    modules = get_available_modules(current_student, type_of_semester, int(year))
     return render(request, 'app/modules.html', {'modules': modules})
 
 
@@ -110,7 +114,7 @@ def modulelist_view(request):
 def prerequisites_view(request, my_module):
     allowed = is_assignable(my_module, request.user)
     prerequisites = Prerequisite.objects.filter(module__MID=my_module)
-    print(allowed, sys.stderr)
+    #print(allowed, sys.stderr)
     return render(request, 'app/prerequisites.html',
                   {'prerequisites': prerequisites, 'module': my_module, 'allowed': allowed})
 

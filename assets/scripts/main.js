@@ -10,17 +10,34 @@ $(function () {
 
     $("#id_type_of_semester").change(function () {
         let type_of_semester = $(this).val();
-
+        let year = $("#id_year").val();
         $.ajax({
             url: '/ajax/get_modules',
             data: {
-                'type_of_semester': type_of_semester
+                'type_of_semester': type_of_semester,
+                'year': year
             },
             success: function (data) {
                 $("#id_module").html(data);
             }
         });
     });
+
+        $("#id_year").change(function () {
+        let year = $(this).val();
+        let type_of_semester = $("#id_type_of_semester").val();
+        $.ajax({
+            url: '/ajax/get_modules',
+            data: {
+                'type_of_semester': type_of_semester,
+                'year': year
+            },
+            success: function (data) {
+                $("#id_module").html(data);
+            }
+        });
+    });
+
 
     $('#confirmModal').on('show.bs.modal', function (event) {
         let trigger = $(event.relatedTarget);

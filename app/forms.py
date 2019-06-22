@@ -48,7 +48,7 @@ class AssignmentForm(forms.ModelForm):
         if self.data and 'type_of_semester' in self.data:
             try:
                 type_of_semester = self.data.get('type_of_semester')
-                assignable_modules = get_available_modules(user, type_of_semester)
+                assignable_modules = get_available_modules(user, type_of_semester, int(year))
                 self.fields['module'].queryset = assignable_modules
             except (ValueError, TypeError):
                 pass
@@ -58,7 +58,8 @@ class AssignmentForm(forms.ModelForm):
             self.initial['score'] = self.instance.score
             assignment = Assignment.objects.filter(pk=self.instance.pk)
             assignment.delete()
-            self.fields['module'].queryset = get_available_modules(user, self.instance.semester[:2])
+            #self.fields['module'].queryset = get_available_modules(user, self.instance.semester[:2])
+            self.fields['module'].queryset = get_available_modules(user, self.instance.semester[:2], int(year))
             self.fields['module'].initial = self.instance.module
 
     def get_semester(self):

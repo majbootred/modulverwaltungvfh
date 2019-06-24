@@ -40,11 +40,11 @@ class AssignmentForm(forms.ModelForm):
         super(AssignmentForm, self).__init__(*args, **kwargs)
 
         self.fields['module'].queryset = Module.objects.none()
+        # set year in dropdown to current year
         year = get_current_year()
-        print(year, sys.stderr)
-        print(type(year), sys.stderr)
         self.initial['year'] = (str(year-2000), str(year))
 
+        # fill module dropdown when type_of_semester has a value
         if self.data and 'type_of_semester' in self.data:
             try:
                 type_of_semester = self.data.get('type_of_semester')
@@ -52,16 +52,17 @@ class AssignmentForm(forms.ModelForm):
                 self.fields['module'].queryset = assignable_modules
             except (ValueError, TypeError):
                 pass
+        # fill fields with values when in edit mode
         elif self.instance.pk:
             self.initial['year'] = self.instance.semester[2:4]
             self.initial['type_of_semester'] = self.instance.semester[:2]
             self.initial['score'] = self.instance.score
             assignment = Assignment.objects.filter(pk=self.instance.pk)
             assignment.delete()
-            #self.fields['module'].queryset = get_available_modules(user, self.instance.semester[:2])
             self.fields['module'].queryset = get_available_modules(user, self.instance.semester[:2], int(year))
             self.fields['module'].initial = self.instance.module
 
+    # returns a string with type of semester and year
     def get_semester(self):
         type_of_semester = self.cleaned_data['type_of_semester']
         year = self.cleaned_data['year']
@@ -75,6 +76,7 @@ class AssignmentForm(forms.ModelForm):
         return self.cleaned_data[name]
 
 
+# helper method to get current year
 def get_current_year():
     now = datetime.datetime.now()
     return now.year

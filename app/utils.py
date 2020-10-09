@@ -102,16 +102,35 @@ def get_start_date(semester):
 
 
 # return the median of scores
+# alte Methode, mit Fehler bei der Berechnung von PRO und BA
+# def get_score_median(all_scores):
+#    scores = []
+#    median = 0.0
+#    for score in all_scores:
+#        scores.append(score.score)
+#        if len(scores) > 0:
+#            median = sum(scores) / len(scores)
+#            median = str('{:.2f}'.format(median)).replace('.', ',')
+#    return median
+
+
+# return the median of scores
 def get_score_median(all_scores):
     scores = []
-    median = 0.0
+    median = 0.00
     for score in all_scores:
         scores.append(score.score)
+        if score.module.MID == "PRO":
+            scores.append(score.score)
+            scores.append(score.score)
+        if score.module.MID == "BA":
+            scores.append(score.score)
+            scores.append(score.score)
         if len(scores) > 0:
-            median = sum(scores) / len(scores)
-            median = str('{:.1f}'.format(median)).replace('.', ',')
-    return median
+            median = round(sum(scores) / len(scores),2)
+            median = str('{:.2f}'.format(median)).replace('.', ',')
 
+    return median
 
 # returns all unscored modules of user
 def get_my_unscored_modules(user):
